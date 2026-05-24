@@ -166,15 +166,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        String texto = Display.getText();
-        if(texto.isEmpty() == true) {
-            Display.setText("Erro");
-            System.out.println("Nenhum valor inserido antes, sem operacao!");
-            return;
-        }
-        primeiro = Integer.parseInt(texto);
-        operacao = "+";
-        limparDisplay();
+        definirOperacao("+");
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
@@ -188,7 +180,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             operacao = "";  
             return;
         }
-        if(operacao.isEmpty() == true) {
+        if(operacao.isEmpty() == true || texto.equals("-")) {
             Display.setText("Erro");
             System.out.println("Nenhuma operacao inserida, cancelado!");
             primeiro = 0;
@@ -234,52 +226,58 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
+        //aqui eh necessario fazer um caso especial para inserir o menos como sinal//
         String texto = Display.getText();
-        if(texto.isEmpty() == true) {
-            Display.setText("Erro");
-            System.out.println("Nenhum valor inserido antes, sem operacao!");
+        if(texto.isEmpty()) {
+            Display.setText("-");
             return;
         }
-        primeiro = Integer.parseInt(texto);
-        operacao = "-";
-        limparDisplay();
+
+        definirOperacao("-");
     }//GEN-LAST:event_jButton16ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        String texto = Display.getText();
-        if(texto.isEmpty() == true) {
-            Display.setText("Erro");
-            System.out.println("Nenhum valor inserido antes, sem operacao!");
-            return;
-        }
-        primeiro = Integer.parseInt(texto);
-        operacao = "*";
-        limparDisplay();
+        definirOperacao("*");
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String texto = Display.getText();
-        if(texto.isEmpty() == true) {
-            Display.setText("Erro");
-            System.out.println("Nenhum valor inserido antes, sem operacao!");
-            return;
-        }
-        primeiro = Integer.parseInt(texto);
-        operacao = "/";
-        limparDisplay();
+        definirOperacao("/");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     void adicionarNumero(int valor) {
         String atual = Display.getText();
         if(atual.equals("Erro")) {
             limparDisplay();
+            atual = "";
         }
-        if(atual.length() < 3) {
+        
+        if(atual.isEmpty() == false && atual.charAt(0) == '-' && atual.length() < 4) {
+            atual = atual+valor;
+            Display.setText(atual);
+        }
+        
+        else if (atual.length() < 3) {
             atual = atual+valor;
             Display.setText(atual);
         }
     }
     
+    void definirOperacao(String operador) {
+        String texto = Display.getText();
+        if(!operacao.equals("")) {
+            operacao = operador;
+            return;
+        }
+        if(texto.isEmpty() == true || texto.equals("-")) {
+            Display.setText("Erro");
+            System.out.println("Nenhum valor inserido antes, sem operacao!");
+            return;
+        }
+        primeiro = Integer.parseInt(texto);
+        operacao = operador;
+        limparDisplay();
+    }
+        
     void limparDisplay() {
         Display.setText("");
     }
