@@ -35,18 +35,20 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Calculadora");
+        getContentPane().setLayout(new java.awt.GridLayout(2, 1));
 
         Display.setEditable(false);
         Display.setBackground(new java.awt.Color(255, 255, 255));
         Display.setFont(new java.awt.Font("Liberation Sans", 0, 24)); // NOI18N
         Display.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         Display.setToolTipText("");
-        Display.setMinimumSize(new java.awt.Dimension(15, 50));
-        Display.setPreferredSize(new java.awt.Dimension(100, 80));
+        Display.setMinimumSize(new java.awt.Dimension(300, 300));
+        Display.setPreferredSize(new java.awt.Dimension(100, 120));
         Display.addActionListener(this::DisplayActionPerformed);
-        getContentPane().add(Display, java.awt.BorderLayout.NORTH);
+        getContentPane().add(Display);
 
         jPanel1.setFont(new java.awt.Font("Liberation Sans", 0, 10)); // NOI18N
+        jPanel1.setMinimumSize(new java.awt.Dimension(300, 50));
         jPanel1.setLayout(new java.awt.GridLayout(4, 4));
 
         jButton1.setText("7");
@@ -113,7 +115,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jButton4.addActionListener(this::jButton4ActionPerformed);
         jPanel1.add(jButton4);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(jPanel1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -171,22 +173,21 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         String texto = Display.getText();
+        if(texto.equals("Erro")) {
+            System.out.println("Impossivel realizar operacoes com 'Erro'!");
+            limparDisplayTotal();
+            return;
+        }
         if(texto.isEmpty() == true) {
-            Display.setText("Erro");
             System.out.println("Nenhum segundo valor inserido, sem operacao!");
-            primeiro = 0;
-            segundo = 0;
-            resultado = 0;
-            operacao = "";  
+            limparDisplayTotal();
+            Display.setText("Erro");
             return;
         }
         if(operacao.isEmpty() == true || texto.equals("-")) {
-            Display.setText("Erro");
             System.out.println("Nenhuma operacao inserida, cancelado!");
-            primeiro = 0;
-            segundo = 0;
-            resultado = 0;
-            operacao = "";  
+            limparDisplayTotal();
+            Display.setText("Erro");
             return;
         }
         segundo = Integer.parseInt(texto);
@@ -203,14 +204,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         }
         else if(operacao.equals("/")) {
             if(segundo == 0) {
+                System.out.println("Divisao por 0 nao permitida!");
+                limparDisplayTotal();
                 Display.setText("Erro");
-                System.out.println("Divisao por 0 nao permitida! Limpando tudo...");
-                primeiro = 0;
-                segundo = 0;
-                resultado = 0;
-                operacao = "";  
                 return;
-            }            
+            }         
             else {
                 resultado = primeiro / segundo;
             }
@@ -264,6 +262,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     
     void definirOperacao(String operador) {
         String texto = Display.getText();
+        if(texto.equals("Erro")) {
+            limparDisplayTotal();
+            return;
+        }
         if(!operacao.equals("")) {
             operacao = operador;
             return;
